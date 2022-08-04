@@ -21,4 +21,18 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 		AOpponent* Opp;
 		
 		void OpponentTurn();
+
+		UFUNCTION(BlueprintCallable, BlueprintPure)
+		FString GetStatus() { return RoundStatus; };
+
+	protected:
+		void ResolveRound();
+		void SetStatus(FString status) { RoundStatus = status; };
+		void IncPlayerWins() { PlayerWins++; };
+		void IncPlayerLosses() { PlayerLosses++; };
+
+	private:
+		FString RoundStatus;
+		uint8 PlayerWins = 0;
+		uint8 PlayerLosses = 0;
 };

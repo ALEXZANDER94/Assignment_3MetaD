@@ -24,4 +24,5 @@ class ASSIGNMENT_3METAD_API ARPS : public AGameModeBase
 
 		void SetAdvancedAI(bool adv) { bAdvAI = adv; };
 		bool GetAdvancedAI() { return bAdvAI; }
+
 };

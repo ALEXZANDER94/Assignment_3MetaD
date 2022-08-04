@@ -2,6 +2,8 @@
 
 #include "RPS.h"
 #include "PlayerPawn.h"
+#include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
 
 ARPS::ARPS()
 {
@@ -12,4 +14,5 @@ ARPS::ARPS()
 	DefaultPawnClass = APlayerPawn::StaticClass();
 
 	bAdvAI = false;
+
 }

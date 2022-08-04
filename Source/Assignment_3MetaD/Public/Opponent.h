@@ -25,6 +25,8 @@ public:
 
 	void MakeChoice();
 
+	EType GetChoice() { return ChoiceType; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

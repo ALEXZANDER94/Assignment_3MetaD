@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
-#include "RPSType.h"
+#include <Assignment_3MetaD/Public/RPSType.h>
 #include "PlayerPawn.generated.h"
 
 UCLASS()
@@ -33,6 +33,8 @@ public:
 
 	void MakeChoice(uint8 choice);
 	DECLARE_DELEGATE_OneParam(ChoiceDelegate, uint8);
+
+	EType GetChoice() { return ChoiceType; }
 
 
 protected:
