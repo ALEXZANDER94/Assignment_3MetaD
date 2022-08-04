@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Fill ou	t your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -15,5 +15,13 @@ class ASSIGNMENT_3METAD_API ARPS : public AGameModeBase
 	GENERATED_BODY()
 
 	ARPS();
+
+	private:
 	
+		bool bAdvAI;
+
+	public:
+
+		void SetAdvancedAI(bool adv) { bAdvAI = adv; };
+		bool GetAdvancedAI() { return bAdvAI; }
 };

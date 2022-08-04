@@ -23,7 +23,6 @@ APlayerPawn::APlayerPawn()
 
 	/* Define the StaticMesh Component and Attach it to the Root*/
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	//Mesh->SetSimulatePhysics(true);
 	Mesh->BodyInstance.bLockYRotation = true;
 	Mesh->SetupAttachment(RootComponent);
 
@@ -72,7 +71,7 @@ void APlayerPawn::Tick(float DeltaTime)
 		}
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Choice: %s"), *UEnum::GetDisplayValueAsText(ChoiceType).ToString()));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Choice: %s"), *UEnum::GetDisplayValueAsText(ChoiceType).ToString()));
 }
 
 // Called to bind functionality to input
@@ -83,7 +82,11 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	/* Bind Left/Right Input Axis to the TurnRight Function */
 	InputComponent->BindAxis(TEXT("Left/Right"), this, &APlayerPawn::TurnRight);
 
-	InputComponent->BindAction(TEXT("VisualChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice );
+	InputComponent->BindAction<ChoiceDelegate>(TEXT("VisualChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)-1);
+
+	InputComponent->BindAction<ChoiceDelegate>(TEXT("RockChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)0);
+	InputComponent->BindAction<ChoiceDelegate>(TEXT("PaperChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)1);
+	InputComponent->BindAction<ChoiceDelegate>(TEXT("ScissorsChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)2);
 }
 
 void APlayerPawn::TurnRight(float delta)
@@ -94,38 +97,38 @@ void APlayerPawn::TurnRight(float delta)
 	}
 }
 
-void APlayerPawn::SetChoice(EType choice)
+
+void APlayerPawn::MakeChoice(uint8 choice)
 {
-	ChoiceType = choice;
-}
-
-void APlayerPawn::MakeChoice()
-{
-	/* For the Make Choice, we need to draw another raycast to receive the select option */
-
-	/* Begin Drawing a Raycast for checking if the player is looking at a choice for selection */
-	FHitResult OutHit;
-
-	/* Performing the Ray Cast requires a Start and End Vector
-	* Start is usually the Current Actor Location
-	* End will be set to 500 units in the player's forward direction
-	*/
-	FVector StartLoc = GetActorLocation();
-	FVector ForwardVector = GetActorForwardVector();
-	FVector EndLoc = ((ForwardVector * 100.f) + StartLoc);
-
-	FCollisionQueryParams Collisions;
-
-	/* Draw Debug Line so we can visually see any collisions - remove for finished product */
-	//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 1, 0, 2);
-
-	bool bHit = GetWorld()->LineTraceSingleByChannel(OutHit, StartLoc, EndLoc, ECollisionChannel::ECC_GameTraceChannel1, Collisions);
-	if (bHit)
+	/* -1 choice would be translated to 255 - the cap for an unsigned 8-bit integer*/
+	if ((uint8)choice != 255)
 	{
-		AActor* HitActor = OutHit.GetActor();
-		if (Cast<ARPSChoice>(HitActor)->ActorHasTag(TEXT("Choice")))
+		/* Choice Made is from Keyboard Input */
+		SetChoice(static_cast<EType>(choice));
+	}
+	else
+	{
+		/* Choice Made is from Mouse Input */
+
+		/* Need to draw another raycast to get which RPS Choice is being looked at*/
+		FHitResult OutHit;
+
+		FVector StartLoc = GetActorLocation();
+		FVector ForwardVector = GetActorForwardVector();
+		FVector EndLoc = ((ForwardVector * 100.f) + StartLoc);
+
+		FCollisionQueryParams Collisions;
+
+		//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 1, 0, 2);
+
+		bool bHit = GetWorld()->LineTraceSingleByChannel(OutHit, StartLoc, EndLoc, ECollisionChannel::ECC_GameTraceChannel1, Collisions);
+		if (bHit)
 		{
-			SetChoice(Cast<ARPSChoice>(HitActor)->GetType());
+			AActor* HitActor = OutHit.GetActor();
+			if (Cast<ARPSChoice>(HitActor)->ActorHasTag(TEXT("Choice")))
+			{
+				SetChoice(static_cast<EType>(Cast<ARPSChoice>(HitActor)->GetType()));
+			}
 		}
 	}
 }

@@ -10,4 +10,6 @@ ARPS::ARPS()
 	PrimaryActorTick.bAllowTickOnDedicatedServer = false;
 
 	DefaultPawnClass = APlayerPawn::StaticClass();
+
+	bAdvAI = false;
 }

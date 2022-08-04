@@ -31,14 +31,15 @@ public:
 
 	void TurnRight(float delta);
 
-	void MakeChoice();
+	void MakeChoice(uint8 choice);
+	DECLARE_DELEGATE_OneParam(ChoiceDelegate, uint8);
 
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void SetChoice(EType type);
+	void SetChoice(EType choice) { ChoiceType = choice; };
 
 private:
 
