@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
 #include "RPSType.h"
 #include "RPSChoice.generated.h"
 
@@ -20,6 +21,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UBoxComponent* HitBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* RPSMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -27,6 +31,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EType Type;
+
+	void ShowOutline();
+	void HideOutline();
+
+	EType GetType() { return Type; };
 
 protected:
 	// Called when the game starts or when spawned

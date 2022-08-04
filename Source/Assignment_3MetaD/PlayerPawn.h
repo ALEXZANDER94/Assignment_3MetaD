@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
+#include "RPSType.h"
 #include "PlayerPawn.generated.h"
 
 UCLASS()
@@ -28,9 +29,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* Mesh;
 
+	void TurnRight(float delta);
+
+	void MakeChoice();
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void SetChoice(EType type);
+
+private:
+
+	EType ChoiceType;
 };
