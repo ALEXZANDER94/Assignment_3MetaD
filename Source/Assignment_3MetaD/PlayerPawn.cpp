@@ -4,6 +4,7 @@
 #include "DrawDebugHelpers.h"
 #include "Engine.h"
 #include <Assignment_3MetaD/Public/RPSChoice.h>
+#include <Assignment_3MetaD/Public/RPSRound.h>
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -95,6 +96,13 @@ void APlayerPawn::TurnRight(float delta)
 	{
 		AddActorLocalRotation(FRotator(0, delta, 0));
 	}
+}
+
+void APlayerPawn::SetChoice(EType choice)
+{
+	ChoiceType = choice;
+
+	Cast<URPSRound>(UGameplayStatics::GetGameInstance(GetWorld()))->OpponentTurn();
 }
 
 

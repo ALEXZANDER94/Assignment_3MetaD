@@ -39,7 +39,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void SetChoice(EType choice) { ChoiceType = choice; };
+	void SetChoice(EType choice);
 
 private:
 

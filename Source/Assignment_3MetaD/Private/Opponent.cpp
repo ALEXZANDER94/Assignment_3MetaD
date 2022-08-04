@@ -29,8 +29,6 @@ void AOpponent::BeginPlay()
 void AOpponent::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Choice: %s"), *UEnum::GetDisplayValueAsText(ChoiceType).ToString()));
 }
 
 void AOpponent::MakeChoice()
@@ -43,5 +41,6 @@ void AOpponent::MakeChoice()
 	{
 		SetChoice(OpponentAI->GetRandomChoice());
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Choice: %s"), *UEnum::GetDisplayValueAsText(ChoiceType).ToString()));
 }
 

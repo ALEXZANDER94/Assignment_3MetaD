@@ -23,13 +23,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* OppMesh;
 
+	void MakeChoice();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void SetChoice(EType choice) { ChoiceType = choice; };
-
-	void MakeChoice();
 
 private:
 	EType ChoiceType;
