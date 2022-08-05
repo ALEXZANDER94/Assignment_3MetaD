@@ -9,7 +9,7 @@
 /**
  * 
  */
-UENUM()
+UENUM(BlueprintType)
 enum class EType : uint8
 {
 	Rock = 0		UMETA(DisplayName = "Rock"),

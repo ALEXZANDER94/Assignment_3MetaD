@@ -1,6 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Opponent.h"
+#include "../Public/Opponent.h"
 #include "../RPS.h"
 #include "OpponentAI.h"
 #include "Kismet/GameplayStatics.h"

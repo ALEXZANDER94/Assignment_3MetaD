@@ -22,8 +22,15 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 		
 		void OpponentTurn();
 
+		/* Have these function be blueprintcallable to use in UserWidgets */
 		UFUNCTION(BlueprintCallable, BlueprintPure)
 		FString GetStatus() { return RoundStatus; };
+
+		UFUNCTION(BlueprintCallable, BlueprintPure)
+		APlayerPawn* GetPlayer() { return Player; }
+
+		UFUNCTION(BlueprintCallable, BlueprintPure)
+		AOpponent* GetOpponent() { return Opp; }
 
 	protected:
 		void ResolveRound();

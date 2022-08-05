@@ -34,6 +34,7 @@ public:
 	void MakeChoice(uint8 choice);
 	DECLARE_DELEGATE_OneParam(ChoiceDelegate, uint8);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	EType GetChoice() { return ChoiceType; }
 
 
@@ -46,4 +47,5 @@ protected:
 private:
 
 	EType ChoiceType;
+
 };
