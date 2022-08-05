@@ -6,6 +6,7 @@
 #include "Assignment_3MetaD/PlayerPawn.h"
 #include "Opponent.h"
 #include "Engine/GameInstance.h"
+#include "Blueprint/UserWidget.h"
 #include "RPSRound.generated.h"
 
 /**

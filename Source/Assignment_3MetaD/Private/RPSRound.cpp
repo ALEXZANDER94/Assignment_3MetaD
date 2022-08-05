@@ -2,6 +2,7 @@
 
 
 #include "../Public/RPSRound.h"
+#include "../RPS.h"
 #include "Kismet/GameplayStatics.h"
 
 void URPSRound::OpponentTurn()
@@ -59,4 +60,6 @@ void URPSRound::ResolveRound()
 		SetStatus("You've Lost The Round");
 		IncPlayerLosses();
 	}
+
+	Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ToggleRoundResult();
 }
