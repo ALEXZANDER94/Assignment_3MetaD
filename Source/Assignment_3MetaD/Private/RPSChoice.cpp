@@ -15,6 +15,7 @@ ARPSChoice::ARPSChoice()
 
 	RPSMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RPSMesh"));
 	RPSMesh->SetupAttachment(RootComponent);
+
 }
 
 // Called when the game starts or when spawned

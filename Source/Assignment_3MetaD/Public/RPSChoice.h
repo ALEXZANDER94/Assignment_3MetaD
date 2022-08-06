@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
+#include "Components/SpotLightComponent.h"
 #include "RPSType.h"
 #include "RPSChoice.generated.h"
 

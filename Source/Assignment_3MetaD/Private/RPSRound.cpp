@@ -3,6 +3,8 @@
 
 #include "../Public/RPSRound.h"
 #include "../RPS.h"
+#include "../PlayerPawn.h"
+#include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
 
 void URPSRound::OpponentTurn()
@@ -27,6 +29,7 @@ void URPSRound::ResolveRound()
 	Player = Cast<APlayerPawn>(PlayerActors[0]);
 
 	bool bPlayerWon = false;
+	FTimerHandle PlayerInputTimer;
 
 	if (Player->GetChoice() == Opp->GetChoice())
 	{
@@ -35,6 +38,8 @@ void URPSRound::ResolveRound()
 		SetStatus("The Round is a Draw");
 		SetPlayerWon(EStatus::Draw);
 		Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ToggleRoundResult();
+		GetWorld()->GetTimerManager().SetTimer(PlayerInputTimer, Player, &APlayerPawn::TogglePlayerInput, 2.f, false);
+		//Player->TogglePlayerInput();
 		return;
 	}
 
@@ -65,5 +70,9 @@ void URPSRound::ResolveRound()
 		IncPlayerLosses();
 	}
 	Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ToggleRoundResult();
+	/* Toggle the Player Input after 2 seconds */
+	
+	GetWorld()->GetTimerManager().SetTimer(PlayerInputTimer, Player, &APlayerPawn::TogglePlayerInput, 2.f, false);
+	//Player->TogglePlayerInput();
 	return;
 }

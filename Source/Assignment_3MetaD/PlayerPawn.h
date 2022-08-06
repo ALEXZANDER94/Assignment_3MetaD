@@ -37,12 +37,17 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	EType GetChoice() { return ChoiceType; }
 
+	UFUNCTION()
+	void TogglePlayerInput();
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void SetChoice(EType choice);
+
+	bool bPlayerEnabled = true;
 
 private:
 

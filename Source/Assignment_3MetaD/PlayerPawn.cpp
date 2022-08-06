@@ -102,7 +102,25 @@ void APlayerPawn::SetChoice(EType choice)
 {
 	ChoiceType = choice;
 
+	/* Disable Player Input to prevent continued selection */
+	TogglePlayerInput();
+
+	/* Call for the Opponent to make their choice */
 	Cast<URPSRound>(UGameplayStatics::GetGameInstance(GetWorld()))->OpponentTurn();
+}
+
+void APlayerPawn::TogglePlayerInput()
+{
+	if (bPlayerEnabled)
+	{
+		bPlayerEnabled = false;
+		DisableInput(GetWorld()->GetFirstPlayerController());
+	}
+	else
+	{
+		bPlayerEnabled = true;
+		EnableInput(GetWorld()->GetFirstPlayerController());
+	}
 }
 
 
@@ -127,6 +145,7 @@ void APlayerPawn::MakeChoice(uint8 choice)
 
 		FCollisionQueryParams Collisions;
 
+		/* Debugging Line to Check Player forward Ray Trace */
 		//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 1, 0, 2);
 
 		bool bHit = GetWorld()->LineTraceSingleByChannel(OutHit, StartLoc, EndLoc, ECollisionChannel::ECC_GameTraceChannel1, Collisions);
@@ -135,12 +154,8 @@ void APlayerPawn::MakeChoice(uint8 choice)
 			ARPSChoice* HitActor = Cast<ARPSChoice>(OutHit.GetActor());
 			if (HitActor && HitActor->ActorHasTag(TEXT("Choice")))
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Choice: %s"), *UEnum::GetDisplayValueAsText(HitActor->Type).ToString()));
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Choice: %s"), *UEnum::GetDisplayValueAsText(HitActor->Type).ToString()));
 				SetChoice(static_cast<EType>(HitActor->Type));
-			}
-			else
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Choice: %s"), *UEnum::GetDisplayValueAsText(HitActor->Type).ToString()));
 			}
 		}
 	}
