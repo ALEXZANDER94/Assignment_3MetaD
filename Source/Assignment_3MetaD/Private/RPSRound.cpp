@@ -33,6 +33,8 @@ void URPSRound::ResolveRound()
 		/* Simplest thing to check for - Round Ends with a Draw */
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("The Round is a Draw."));
 		SetStatus("The Round is a Draw");
+		SetPlayerWon(EStatus::Draw);
+		Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ToggleRoundResult();
 		return;
 	}
 
@@ -52,14 +54,16 @@ void URPSRound::ResolveRound()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("You've Won the Round."));
 		SetStatus("You've Won The Round");
+		SetPlayerWon(EStatus::Win);
 		IncPlayerWins();
 	}
 	else
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("You've Lost the Round."));
 		SetStatus("You've Lost The Round");
+		SetPlayerWon(EStatus::Lose);
 		IncPlayerLosses();
 	}
-
 	Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ToggleRoundResult();
+	return;
 }

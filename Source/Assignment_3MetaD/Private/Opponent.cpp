@@ -40,6 +40,7 @@ void AOpponent::MakeChoice()
 	{
 		SetChoice(OpponentAI->GetRandomChoice());
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Choice: %s"), *UEnum::GetDisplayValueAsText(ChoiceType).ToString()));
+	/* Debug Output to see what the Opponent Picked */
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Choice: %s"), *UEnum::GetDisplayValueAsText(ChoiceType).ToString()));
 }
 

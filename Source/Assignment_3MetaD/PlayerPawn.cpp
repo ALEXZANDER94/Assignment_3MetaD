@@ -132,10 +132,15 @@ void APlayerPawn::MakeChoice(uint8 choice)
 		bool bHit = GetWorld()->LineTraceSingleByChannel(OutHit, StartLoc, EndLoc, ECollisionChannel::ECC_GameTraceChannel1, Collisions);
 		if (bHit)
 		{
-			AActor* HitActor = OutHit.GetActor();
-			if (Cast<ARPSChoice>(HitActor)->ActorHasTag(TEXT("Choice")))
+			ARPSChoice* HitActor = Cast<ARPSChoice>(OutHit.GetActor());
+			if (HitActor && HitActor->ActorHasTag(TEXT("Choice")))
 			{
-				SetChoice(static_cast<EType>(Cast<ARPSChoice>(HitActor)->GetType()));
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Choice: %s"), *UEnum::GetDisplayValueAsText(HitActor->Type).ToString()));
+				SetChoice(static_cast<EType>(HitActor->Type));
+			}
+			else
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Choice: %s"), *UEnum::GetDisplayValueAsText(HitActor->Type).ToString()));
 			}
 		}
 	}
