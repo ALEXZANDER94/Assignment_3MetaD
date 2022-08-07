@@ -13,6 +13,4 @@ ARPS::ARPS()
 
 	DefaultPawnClass = APlayerPawn::StaticClass();
 
-	bAdvAI = false;
-
 }

@@ -16,6 +16,16 @@ enum class EStatus : uint8
 	Lose = 1	UMETA(DisplayName = "Lose"),
 	Win = 2		UMETA(DisplayName = "Win")
 };
+
+UENUM(BlueprintType)
+enum class EMode : uint8
+{
+	BOf3 = 0	UMETA(DisplayName = "Best of 3"),
+	BOf5 = 1	UMETA(DisplayName = "Best of 5"),
+	FTo3 = 2	UMETA(DisplayName = "First to 3"),
+	FTo5 = 3	UMETA(DisplayName = "First to 5"),
+	Endless = 5	UMETA(DisplayName = "Endless")
+};
 UCLASS()
 class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 {
@@ -48,6 +58,15 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 
 		UFUNCTION(BlueprintCallable, BlueprintPure)
 		int GetRound() { return Round; }
+		
+		UFUNCTION(BlueprintCallable, BlueprintPure)
+		bool GetAdvancedAI() { return bAdvancedAI; }
+
+		UFUNCTION(BlueprintCallable)
+		void SetAdvancedAI(bool advAI) { bAdvancedAI = advAI; }
+
+		UFUNCTION(BlueprintCallable)
+		void SetMode(EMode mode) { Mode = mode; }
 
 	protected:
 		void ResolveRound();
@@ -64,6 +83,9 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 		int PlayerWins = 0;
 		int PlayerLosses = 0;
 		EStatus PlayerWon = EStatus::Draw;
+
+		bool bAdvancedAI = false;
+		EMode Mode = EMode::BOf3;
 
 		int Round = 1;
 };

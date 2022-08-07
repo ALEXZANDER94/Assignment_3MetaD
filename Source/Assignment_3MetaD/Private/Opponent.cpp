@@ -3,6 +3,7 @@
 #include "../RPS.h"
 #include "OpponentAI.h"
 #include "Kismet/GameplayStatics.h"
+#include <Assignment_3MetaD/Public/RPSRound.h>
 
 // Sets default values
 AOpponent::AOpponent()
@@ -32,7 +33,7 @@ void AOpponent::Tick(float DeltaTime)
 
 void AOpponent::MakeChoice()
 {
-	if (Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->GetAdvancedAI())
+	if (Cast<URPSRound>(UGameplayStatics::GetGameInstance(GetWorld()))->GetAdvancedAI())
 	{
 		SetChoice(OpponentAI->GetFuzzyChoice());
 	}
