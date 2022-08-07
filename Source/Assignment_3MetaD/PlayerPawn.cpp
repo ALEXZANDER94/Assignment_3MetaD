@@ -83,7 +83,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	/* Bind Left/Right Input Axis to the TurnRight Function */
 	InputComponent->BindAxis(TEXT("Left/Right"), this, &APlayerPawn::TurnRight);
 
-	InputComponent->BindAction<ChoiceDelegate>(TEXT("VisualChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)-1);
+	InputComponent->BindAction<ChoiceDelegate>(TEXT("VisualChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8) - 1);
 
 	InputComponent->BindAction<ChoiceDelegate>(TEXT("RockChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)0);
 	InputComponent->BindAction<ChoiceDelegate>(TEXT("PaperChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)1);
@@ -126,7 +126,6 @@ void APlayerPawn::TogglePlayerInput()
 
 void APlayerPawn::MakeChoice(uint8 choice)
 {
-	/* -1 choice would be translated to 255 - the cap for an unsigned 8-bit integer*/
 	if ((uint8)choice != 255)
 	{
 		/* Choice Made is from Keyboard Input */

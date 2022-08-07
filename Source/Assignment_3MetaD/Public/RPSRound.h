@@ -41,6 +41,12 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 		EStatus GetPlayerWon() { return PlayerWon; }
 
 		UFUNCTION(BlueprintCallable, BlueprintPure)
+		int GetPlayerWins() { return PlayerWins; }
+
+		UFUNCTION(BlueprintCallable, BlueprintPure)
+		int GetPlayerLosses() { return PlayerLosses; }
+
+		UFUNCTION(BlueprintCallable, BlueprintPure)
 		int GetRound() { return Round; }
 
 	protected:
@@ -55,8 +61,8 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 
 	private:
 		FString RoundStatus;
-		uint8 PlayerWins = 0;
-		uint8 PlayerLosses = 0;
+		int PlayerWins = 0;
+		int PlayerLosses = 0;
 		EStatus PlayerWon = EStatus::Draw;
 
 		int Round = 1;
