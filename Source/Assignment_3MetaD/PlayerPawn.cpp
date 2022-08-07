@@ -83,7 +83,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	/* Bind Left/Right Input Axis to the TurnRight Function */
 	InputComponent->BindAxis(TEXT("Left/Right"), this, &APlayerPawn::TurnRight);
 
-	InputComponent->BindAction<ChoiceDelegate>(TEXT("VisualChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)-1);
+	InputComponent->BindAction<ChoiceDelegate>(TEXT("VisualChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8) - 1);
 
 	InputComponent->BindAction<ChoiceDelegate>(TEXT("RockChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)0);
 	InputComponent->BindAction<ChoiceDelegate>(TEXT("PaperChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)1);
@@ -102,13 +102,30 @@ void APlayerPawn::SetChoice(EType choice)
 {
 	ChoiceType = choice;
 
+	/* Disable Player Input to prevent continued selection */
+	TogglePlayerInput();
+
+	/* Call for the Opponent to make their choice */
 	Cast<URPSRound>(UGameplayStatics::GetGameInstance(GetWorld()))->OpponentTurn();
+}
+
+void APlayerPawn::TogglePlayerInput()
+{
+	if (bPlayerEnabled)
+	{
+		bPlayerEnabled = false;
+		DisableInput(GetWorld()->GetFirstPlayerController());
+	}
+	else
+	{
+		bPlayerEnabled = true;
+		EnableInput(GetWorld()->GetFirstPlayerController());
+	}
 }
 
 
 void APlayerPawn::MakeChoice(uint8 choice)
 {
-	/* -1 choice would be translated to 255 - the cap for an unsigned 8-bit integer*/
 	if ((uint8)choice != 255)
 	{
 		/* Choice Made is from Keyboard Input */
@@ -127,15 +144,17 @@ void APlayerPawn::MakeChoice(uint8 choice)
 
 		FCollisionQueryParams Collisions;
 
+		/* Debugging Line to Check Player forward Ray Trace */
 		//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 1, 0, 2);
 
 		bool bHit = GetWorld()->LineTraceSingleByChannel(OutHit, StartLoc, EndLoc, ECollisionChannel::ECC_GameTraceChannel1, Collisions);
 		if (bHit)
 		{
-			AActor* HitActor = OutHit.GetActor();
-			if (Cast<ARPSChoice>(HitActor)->ActorHasTag(TEXT("Choice")))
+			ARPSChoice* HitActor = Cast<ARPSChoice>(OutHit.GetActor());
+			if (HitActor && HitActor->ActorHasTag(TEXT("Choice")))
 			{
-				SetChoice(static_cast<EType>(Cast<ARPSChoice>(HitActor)->GetType()));
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Choice: %s"), *UEnum::GetDisplayValueAsText(HitActor->Type).ToString()));
+				SetChoice(static_cast<EType>(HitActor->Type));
 			}
 		}
 	}

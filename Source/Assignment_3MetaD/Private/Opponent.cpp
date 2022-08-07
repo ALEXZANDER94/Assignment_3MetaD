@@ -1,6 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Opponent.h"
+#include "../Public/Opponent.h"
 #include "../RPS.h"
 #include "OpponentAI.h"
 #include "Kismet/GameplayStatics.h"
@@ -41,6 +40,7 @@ void AOpponent::MakeChoice()
 	{
 		SetChoice(OpponentAI->GetRandomChoice());
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Choice: %s"), *UEnum::GetDisplayValueAsText(ChoiceType).ToString()));
+	/* Debug Output to see what the Opponent Picked */
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Choice: %s"), *UEnum::GetDisplayValueAsText(ChoiceType).ToString()));
 }
 

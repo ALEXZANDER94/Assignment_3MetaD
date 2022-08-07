@@ -25,6 +25,7 @@ public:
 
 	void MakeChoice();
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	EType GetChoice() { return ChoiceType; }
 
 protected:

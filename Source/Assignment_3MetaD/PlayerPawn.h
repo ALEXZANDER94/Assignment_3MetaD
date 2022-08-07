@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Public/RPSChoice.h"
 #include "Camera/CameraComponent.h"
 #include <Assignment_3MetaD/Public/RPSType.h>
 #include "PlayerPawn.generated.h"
@@ -29,12 +30,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* Mesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ARPSChoice* RockPlayerChoice;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ARPSChoice* PaperPlayerChoice;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ARPSChoice* ScissorsPlayerChoice;
+
 	void TurnRight(float delta);
 
 	void MakeChoice(uint8 choice);
 	DECLARE_DELEGATE_OneParam(ChoiceDelegate, uint8);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	EType GetChoice() { return ChoiceType; }
+
+	UFUNCTION()
+	void TogglePlayerInput();
 
 
 protected:
@@ -43,7 +57,10 @@ protected:
 
 	void SetChoice(EType choice);
 
+	bool bPlayerEnabled = true;
+
 private:
 
 	EType ChoiceType;
+
 };

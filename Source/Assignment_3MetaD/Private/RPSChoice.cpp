@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "RPSChoice.h"
+#include "../Public/RPSChoice.h"
 
 // Sets default values
 ARPSChoice::ARPSChoice()
@@ -15,6 +15,7 @@ ARPSChoice::ARPSChoice()
 
 	RPSMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RPSMesh"));
 	RPSMesh->SetupAttachment(RootComponent);
+
 }
 
 // Called when the game starts or when spawned
