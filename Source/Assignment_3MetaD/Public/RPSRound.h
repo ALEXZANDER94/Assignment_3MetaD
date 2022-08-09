@@ -55,6 +55,9 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 
 		UFUNCTION(BlueprintCallable, BlueprintPure)
 		int GetPlayerLosses() { return PlayerLosses; }
+		
+		UFUNCTION(BlueprintCallable, BlueprintPure)
+		int GetDraws() { return DrawGames; }
 
 		UFUNCTION(BlueprintCallable, BlueprintPure)
 		int GetRound() { return Round; }
@@ -68,24 +71,32 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 		UFUNCTION(BlueprintCallable)
 		void SetMode(EMode mode) { Mode = mode; }
 
+		UFUNCTION(BlueprintCallable)
+		bool GetGameOver() { return GameOver; }
+
+		UFUNCTION(BlueprintCallable)
+		void ResetGame();
+
 	protected:
 		void ResolveRound();
 		void SetStatus(FString status) { RoundStatus = status; };
 		void IncPlayerWins() { PlayerWins++; };
 		void IncPlayerLosses() { PlayerLosses++; };
+		void IncDrawGames() { DrawGames++; };
 		void SetPlayerWon(EStatus won) { PlayerWon = won; };
-
-		UFUNCTION(BlueprintCallable)
+		void SetGameOver(bool over) { GameOver = over; };
 		void IncRounds() { Round++; };
+		UFUNCTION(BlueprintCallable)
+		void CheckGame();
 
 	private:
 		FString RoundStatus;
 		int PlayerWins = 0;
 		int PlayerLosses = 0;
+		int DrawGames = 0;
 		EStatus PlayerWon = EStatus::Draw;
-
 		bool bAdvancedAI = false;
 		EMode Mode = EMode::BOf3;
-
+		bool GameOver = false;
 		int Round = 1;
 };

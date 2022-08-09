@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Public/RPSRound.h"
 #include "RPS.generated.h"
 
 /**
@@ -20,4 +21,7 @@ class ASSIGNMENT_3METAD_API ARPS : public AGameModeBase
 
 		UFUNCTION(BlueprintImplementableEvent)
 		void ToggleRoundResult();
+
+		UFUNCTION(BlueprintImplementableEvent)
+		void ShowGameOver(EStatus gameStatus);
 };
