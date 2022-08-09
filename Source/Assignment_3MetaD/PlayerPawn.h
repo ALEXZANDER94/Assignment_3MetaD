@@ -47,7 +47,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	EType GetChoice() { return ChoiceType; }
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void TogglePlayerInput();
 
 

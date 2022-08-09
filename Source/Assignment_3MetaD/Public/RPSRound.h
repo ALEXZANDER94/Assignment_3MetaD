@@ -16,6 +16,16 @@ enum class EStatus : uint8
 	Lose = 1	UMETA(DisplayName = "Lose"),
 	Win = 2		UMETA(DisplayName = "Win")
 };
+
+UENUM(BlueprintType)
+enum class EMode : uint8
+{
+	BOf3 = 0	UMETA(DisplayName = "Best of 3"),
+	BOf5 = 1	UMETA(DisplayName = "Best of 5"),
+	FTo3 = 2	UMETA(DisplayName = "First to 3"),
+	FTo5 = 3	UMETA(DisplayName = "First to 5"),
+	Endless = 5	UMETA(DisplayName = "Endless")
+};
 UCLASS()
 class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 {
@@ -45,25 +55,48 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 
 		UFUNCTION(BlueprintCallable, BlueprintPure)
 		int GetPlayerLosses() { return PlayerLosses; }
+		
+		UFUNCTION(BlueprintCallable, BlueprintPure)
+		int GetDraws() { return DrawGames; }
 
 		UFUNCTION(BlueprintCallable, BlueprintPure)
 		int GetRound() { return Round; }
+		
+		UFUNCTION(BlueprintCallable, BlueprintPure)
+		bool GetAdvancedAI() { return bAdvancedAI; }
+
+		UFUNCTION(BlueprintCallable)
+		void SetAdvancedAI(bool advAI) { bAdvancedAI = advAI; }
+
+		UFUNCTION(BlueprintCallable)
+		void SetMode(EMode mode) { Mode = mode; }
+
+		UFUNCTION(BlueprintCallable)
+		bool GetGameOver() { return GameOver; }
+
+		UFUNCTION(BlueprintCallable)
+		void ResetGame();
 
 	protected:
 		void ResolveRound();
 		void SetStatus(FString status) { RoundStatus = status; };
 		void IncPlayerWins() { PlayerWins++; };
 		void IncPlayerLosses() { PlayerLosses++; };
+		void IncDrawGames() { DrawGames++; };
 		void SetPlayerWon(EStatus won) { PlayerWon = won; };
-
-		UFUNCTION(BlueprintCallable)
+		void SetGameOver(bool over) { GameOver = over; };
 		void IncRounds() { Round++; };
+		UFUNCTION(BlueprintCallable)
+		void CheckGame();
 
 	private:
 		FString RoundStatus;
 		int PlayerWins = 0;
 		int PlayerLosses = 0;
+		int DrawGames = 0;
 		EStatus PlayerWon = EStatus::Draw;
-
+		bool bAdvancedAI = false;
+		EMode Mode = EMode::BOf3;
+		bool GameOver = false;
 		int Round = 1;
 };

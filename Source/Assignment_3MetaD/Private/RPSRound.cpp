@@ -31,9 +31,9 @@ void URPSRound::ResolveRound()
 	if (Player->GetChoice() == Opp->GetChoice())
 	{
 		/* Simplest thing to check for - Round Ends with a Draw */
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("The Round is a Draw."));
 		SetStatus("The Round is a Draw");
 		SetPlayerWon(EStatus::Draw);
+		IncDrawGames();
 		Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ToggleRoundResult();
 		GetWorld()->GetTimerManager().SetTimer(PlayerInputTimer, Player, &APlayerPawn::TogglePlayerInput, 2.f, false);
 		return;
@@ -57,14 +57,12 @@ void URPSRound::ResolveRound()
 
 	if (ePlayerWon == EStatus::Win)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("You've Won the Round."));
 		SetStatus("You've Won The Round");
 		SetPlayerWon(EStatus::Win);
 		IncPlayerWins();
 	}
 	else if (ePlayerWon == EStatus::Lose)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("You've Lost the Round."));
 		SetStatus("You've Lost The Round");
 		SetPlayerWon(EStatus::Lose);
 		IncPlayerLosses();
@@ -73,4 +71,69 @@ void URPSRound::ResolveRound()
 	/* Toggle the Player Input after 2 seconds */
 	GetWorld()->GetTimerManager().SetTimer(PlayerInputTimer, Player, &APlayerPawn::TogglePlayerInput, 2.f, false);
 	return;
+}
+
+void URPSRound::CheckGame()
+{
+	EStatus GameResult;
+	switch (Mode)
+	{
+		case EMode::BOf3:
+			if (Round == 3)
+			{
+				GameResult = (PlayerWins == PlayerLosses) ? EStatus::Draw : (PlayerWins > PlayerLosses) ? EStatus::Win : EStatus::Lose;
+				Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ShowGameOver(GameResult);
+				GetPlayer()->TogglePlayerInput();
+			}
+			break;
+		case EMode::BOf5:
+			if (Round == 5)
+			{
+				GameResult = (PlayerWins == PlayerLosses) ? EStatus::Draw : (PlayerWins > PlayerLosses) ? EStatus::Win : EStatus::Lose;
+				Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ShowGameOver(GameResult);
+				GetPlayer()->TogglePlayerInput();
+			}
+			break;
+		case EMode::FTo3:
+			if (PlayerWins >= 3)
+			{
+				Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ShowGameOver(EStatus::Win);
+				GetPlayer()->TogglePlayerInput();
+			}
+			else if (PlayerLosses >= 3)
+			{
+				Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ShowGameOver(EStatus::Lose);
+				GetPlayer()->TogglePlayerInput();
+			}
+			break;
+		case EMode::FTo5:
+			if (PlayerWins >= 5)
+			{
+				Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ShowGameOver(EStatus::Win);
+				GetPlayer()->TogglePlayerInput();
+			}
+			else if (PlayerLosses >= 5)
+			{
+				Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ShowGameOver(EStatus::Lose);
+				GetPlayer()->TogglePlayerInput();
+			}
+			break;
+		case EMode::Endless:
+			break;
+	}
+	IncRounds();
+}
+
+void URPSRound::ResetGame()
+{
+	//Reset all the game variables and toggle the Player Input again.
+	RoundStatus = "";
+	PlayerWins = 0;
+	PlayerLosses = 0;
+	DrawGames = 0;
+	PlayerWon = EStatus::Draw;
+	GameOver = false;
+	Round = 1;
+
+	GetPlayer()->TogglePlayerInput();
 }

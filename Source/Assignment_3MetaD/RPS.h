@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Public/RPSRound.h"
 #include "RPS.generated.h"
 
 /**
@@ -15,16 +16,12 @@ class ASSIGNMENT_3METAD_API ARPS : public AGameModeBase
 	GENERATED_BODY()
 
 	ARPS();
-
-	private:
 	
-		bool bAdvAI;
-
 	public:
-
-		void SetAdvancedAI(bool adv) { bAdvAI = adv; };
-		bool GetAdvancedAI() { return bAdvAI; }
 
 		UFUNCTION(BlueprintImplementableEvent)
 		void ToggleRoundResult();
+
+		UFUNCTION(BlueprintImplementableEvent)
+		void ShowGameOver(EStatus gameStatus);
 };
