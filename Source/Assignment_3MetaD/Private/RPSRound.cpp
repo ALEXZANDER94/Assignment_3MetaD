@@ -3,6 +3,7 @@
 #include "../PlayerPawn.h"
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 void URPSRound::OpponentTurn()
 {
@@ -12,43 +13,81 @@ void URPSRound::OpponentTurn()
 
 	Opp->MakeChoice();
 
-	ResolveRound();
+	//Perform Animations Here, before the round is resolved.
+	//Gives the illusion that the round is unable to resolve until the visuals complete
+	PerformRoundAnim();
+
+	//ResolveRound();
+}
+
+void URPSRound::PerformRoundAnim()
+{
+	//To start the round off, toggle the Spot lights for the round
+	//Get the Opponent
+	if (!Opp)
+	{
+		TArray<AActor*> OpponentActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AOpponent::StaticClass(), OpponentActors);
+		Opp = Cast<AOpponent>(OpponentActors[0]);
+	}
+	if (!Player)
+	{
+		//Get the Player
+		TArray<AActor*> PlayerActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerPawn::StaticClass(), PlayerActors);
+		Player = Cast<APlayerPawn>(PlayerActors[0]);
+	}
+	Player->GetChoiceObject()->ToggleIntensity(500.f);
+	Opp->GetChoiceObject()->ToggleIntensity(500.f);
+	//Player->GetChoiceObject()->RPSLight->SetVisibility(true);
+	//Opp->GetChoiceObject()->RPSLight->SetVisibility(true);
 }
 
 void URPSRound::ResolveRound()
 {
-	TArray<AActor*> OpponentActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AOpponent::StaticClass(), OpponentActors);
-	Opp = Cast<AOpponent>(OpponentActors[0]);
+	//Get the Opponent
+	if (!Opp)
+	{
+		TArray<AActor*> OpponentActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AOpponent::StaticClass(), OpponentActors);
+		Opp = Cast<AOpponent>(OpponentActors[0]);
+	}
+	if (!Player)
+	{
+		//Get the Player
+		TArray<AActor*> PlayerActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerPawn::StaticClass(), PlayerActors);
+		Player = Cast<APlayerPawn>(PlayerActors[0]);
+	}
 
-	TArray<AActor*> PlayerActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerPawn::StaticClass(), PlayerActors);
-	Player = Cast<APlayerPawn>(PlayerActors[0]);
-
+	//Set Default PlayerWon State and define a Timer for the toggling the player input
+	//after the round result has been logged
 	EStatus ePlayerWon = EStatus::Draw;
 	FTimerHandle PlayerInputTimer;
 
-	if (Player->GetChoice() == Opp->GetChoice())
-	{
-		/* Simplest thing to check for - Round Ends with a Draw */
-		SetStatus("The Round is a Draw");
-		SetPlayerWon(EStatus::Draw);
-		IncDrawGames();
-		Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ToggleRoundResult();
-		GetWorld()->GetTimerManager().SetTimer(PlayerInputTimer, Player, &APlayerPawn::TogglePlayerInput, 2.f, false);
-		return;
-	}
-
-	/*	We only need to check for the conditions where the player wins,
-	*	If none of these conditions are met and it's not a draw, then the player has lost.
+	/*
+	*	The Flow of a Round ending is to set the status text, the the PlayerWon State,
+	*	Increment the appropriate counter, then send it to the Game to call the HUD Functions 
+	*	For the Round Log
 	*/
-	
+
+	/* Debugging Outputs to check the Player Choice and Opponent Choice */
+	/*
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Player Choice: %s"), *UEnum::GetDisplayValueAsText(Player->GetChoice()).ToString()));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("Opp Choice: %s"), *UEnum::GetDisplayValueAsText(Opp->GetChoice()).ToString()));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Player Choice: %s"), *UKismetSystemLibrary::GetDisplayName(Player->GetChoiceObject())));
+	*/
+
 	if ((Player->GetChoice() == EType::Rock && Opp->GetChoice() == EType::Scissors) ||
 		(Player->GetChoice() == EType::Paper && Opp->GetChoice() == EType::Rock) ||
 		(Player->GetChoice() == EType::Scissors && Opp->GetChoice() == EType::Paper))
 	{
 		
 		ePlayerWon = EStatus::Win;
+	}
+	else if (Player->GetChoice() == Opp->GetChoice())
+	{
+		ePlayerWon = EStatus::Draw;
 	}
 	else
 	{
@@ -67,14 +106,29 @@ void URPSRound::ResolveRound()
 		SetPlayerWon(EStatus::Lose);
 		IncPlayerLosses();
 	}
+	else
+	{
+		SetStatus("The Round is a Draw");
+		SetPlayerWon(EStatus::Draw);
+		IncDrawGames();
+	}
 	Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->ToggleRoundResult();
 	/* Toggle the Player Input after 2 seconds */
 	GetWorld()->GetTimerManager().SetTimer(PlayerInputTimer, Player, &APlayerPawn::TogglePlayerInput, 2.f, false);
 	return;
 }
 
+/*
+*	This function checks to see if the game is over.
+*	This could occur when the round is equal to a defined number
+*	or a player has reached a number of wins.
+*/
 void URPSRound::CheckGame()
 {
+	/*
+	* I really dislike that some of the code is being re-used, but different game modes
+	* calls for different kinds of checks
+	*/
 	EStatus GameResult;
 	switch (Mode)
 	{
@@ -121,6 +175,8 @@ void URPSRound::CheckGame()
 		case EMode::Endless:
 			break;
 	}
+	/* Increment the Rounds at the end of the game over being checked
+	*/
 	IncRounds();
 }
 

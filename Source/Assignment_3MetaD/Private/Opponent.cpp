@@ -39,7 +39,19 @@ void AOpponent::MakeChoice()
 	}
 	else
 	{
-		SetChoice(OpponentAI->GetRandomChoice());
+		EType choice = OpponentAI->GetRandomChoice();
+		SetChoice(choice);
+		
+		for (TActorIterator<ARPSChoice> ChoiceActor(GetWorld()); ChoiceActor; ++ChoiceActor)
+		{
+			ARPSChoice* ChoiceObj = *ChoiceActor;
+			FString ChoiceTypeAsString = (choice == EType::Rock) ? TEXT("Rock") : (choice == EType::Paper) ? TEXT("Paper") : TEXT("Scissors");
+			if (ChoiceObj->ActorHasTag("Opponent") && ChoiceObj->ActorHasTag(FName(*ChoiceTypeAsString)))
+			{
+				SetChoiceObject(ChoiceObj);
+			}
+		}
+		
 	}
 	/* Debug Output to see what the Opponent Picked */
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Choice: %s"), *UEnum::GetDisplayValueAsText(ChoiceType).ToString()));

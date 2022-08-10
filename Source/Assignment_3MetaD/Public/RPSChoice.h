@@ -33,6 +33,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EType Type;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USpotLightComponent* RPSLight;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ToggleIntensity(float target);
+
 	void ShowOutline();
 	void HideOutline();
 

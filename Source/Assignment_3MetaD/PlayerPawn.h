@@ -47,6 +47,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	EType GetChoice() { return ChoiceType; }
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	ARPSChoice* GetChoiceObject() { return Choice; }
+
 	UFUNCTION(BlueprintCallable)
 	void TogglePlayerInput();
 
@@ -59,8 +62,11 @@ protected:
 
 	bool bPlayerEnabled = true;
 
+	void SetChoiceObject(ARPSChoice* choice);
+
 private:
 
 	EType ChoiceType;
 
+	ARPSChoice* Choice;
 };

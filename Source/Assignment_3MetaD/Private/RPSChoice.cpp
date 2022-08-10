@@ -16,6 +16,11 @@ ARPSChoice::ARPSChoice()
 	RPSMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RPSMesh"));
 	RPSMesh->SetupAttachment(RootComponent);
 
+	RPSLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("RPSSpotLight"));
+	RPSLight->SetupAttachment(RPSMesh);
+	RPSLight->SetIntensity(500.f);
+	RPSLight->SetRelativeLocation(FVector(0, 0, 25.f));
+	RPSLight->SetRelativeRotation(FRotator(-90.f, 0, 0));
 }
 
 // Called when the game starts or when spawned

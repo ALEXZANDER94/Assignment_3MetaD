@@ -24,4 +24,10 @@ class ASSIGNMENT_3METAD_API ARPS : public AGameModeBase
 
 		UFUNCTION(BlueprintImplementableEvent)
 		void ShowGameOver(EStatus gameStatus);
+
+		UFUNCTION(BlueprintImplementableEvent)
+		void MoveLogUp();
+
+		UFUNCTION(BlueprintImplementableEvent)
+		void MoveLogDown();
 };

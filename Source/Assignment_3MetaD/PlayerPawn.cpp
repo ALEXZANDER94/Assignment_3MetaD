@@ -3,8 +3,10 @@
 #include "PlayerPawn.h"
 #include "DrawDebugHelpers.h"
 #include "Engine.h"
+#include "RPS.h"
 #include <Assignment_3MetaD/Public/RPSChoice.h>
 #include <Assignment_3MetaD/Public/RPSRound.h>
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -51,7 +53,7 @@ void APlayerPawn::Tick(float DeltaTime)
 	
 	/* Performing the Ray Cast requires a Start and End Vector 
 	* Start is usually the Current Actor Location
-	* End will be set to 500 units in the player's forward direction
+	* End will be set to 100 units in the player's forward direction
 	*/
 	FVector StartLoc = GetActorLocation();
 	FVector ForwardVector = GetActorForwardVector();
@@ -83,15 +85,20 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	/* Bind Left/Right Input Axis to the TurnRight Function */
 	InputComponent->BindAxis(TEXT("Left/Right"), this, &APlayerPawn::TurnRight);
 
+	/* Set Bindings for the Choice Actions: pressing the R (Rock), P (Paper), S (Scissors) or Mouse click */
 	InputComponent->BindAction<ChoiceDelegate>(TEXT("VisualChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8) - 1);
-
 	InputComponent->BindAction<ChoiceDelegate>(TEXT("RockChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)0);
 	InputComponent->BindAction<ChoiceDelegate>(TEXT("PaperChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)1);
 	InputComponent->BindAction<ChoiceDelegate>(TEXT("ScissorsChoice"), EInputEvent::IE_Pressed, this, &APlayerPawn::MakeChoice, (uint8)2);
+
+	/* Set Bindings for Moving the log Up and Down: pressing the Up or Down arrow Keys */
+	InputComponent->BindAction(TEXT("MoveLogUp"), EInputEvent::IE_Pressed, Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld())), &ARPS::MoveLogUp);
+	InputComponent->BindAction(TEXT("MoveLogDown"), EInputEvent::IE_Pressed, Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld())), &ARPS::MoveLogDown);
 }
 
 void APlayerPawn::TurnRight(float delta)
 {
+	/* Need to rotate on the Z Axis - which is done by applying the delta to the Yaw*/
 	if (delta)
 	{
 		AddActorLocalRotation(FRotator(0, delta, 0));
@@ -107,6 +114,11 @@ void APlayerPawn::SetChoice(EType choice)
 
 	/* Call for the Opponent to make their choice */
 	Cast<URPSRound>(UGameplayStatics::GetGameInstance(GetWorld()))->OpponentTurn();
+}
+
+void APlayerPawn::SetChoiceObject(ARPSChoice* choice)
+{
+	Choice = choice;
 }
 
 void APlayerPawn::TogglePlayerInput()
@@ -129,6 +141,17 @@ void APlayerPawn::MakeChoice(uint8 choice)
 	if ((uint8)choice != 255)
 	{
 		/* Choice Made is from Keyboard Input */
+		
+		for (TActorIterator<ARPSChoice> ChoiceActor(GetWorld()); ChoiceActor; ++ChoiceActor) 
+		{
+			ARPSChoice* ChoiceObj = *ChoiceActor;
+			FString ChoiceTypeAsString = (choice == 0) ? TEXT("Rock") : (choice == 1) ? TEXT("Paper") : TEXT("Scissors");
+			if (ChoiceObj->ActorHasTag("Player") && ChoiceObj->ActorHasTag(FName(*ChoiceTypeAsString)))
+			{
+				SetChoiceObject(ChoiceObj);
+			}
+		}
+		
 		SetChoice(static_cast<EType>(choice));
 	}
 	else
@@ -154,6 +177,7 @@ void APlayerPawn::MakeChoice(uint8 choice)
 			if (HitActor && HitActor->ActorHasTag(TEXT("Choice")))
 			{
 				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Choice: %s"), *UEnum::GetDisplayValueAsText(HitActor->Type).ToString()));
+				SetChoiceObject(HitActor);
 				SetChoice(static_cast<EType>(HitActor->Type));
 			}
 		}
