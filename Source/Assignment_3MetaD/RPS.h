@@ -34,9 +34,6 @@ class ASSIGNMENT_3METAD_API ARPS : public AGameModeBase
 		UFUNCTION(BlueprintImplementableEvent)
 		void RoundSequencer();
 
-		UFUNCTION(BlueprintImplementableEvent)
-		void OppositionSequencer();
-
-		UFUNCTION(BlueprintImplementableEvent)
+		UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void CleanupSequencer();
 };

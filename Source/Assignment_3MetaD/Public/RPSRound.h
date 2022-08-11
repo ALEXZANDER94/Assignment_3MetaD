@@ -79,6 +79,7 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 
 		void PerformRoundAnim();
 
+		UFUNCTION(BlueprintCallable)
 		void CleanupRoundAnim();
 
 	protected:

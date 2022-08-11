@@ -16,11 +16,6 @@ void URPSRound::OpponentTurn()
 	//Perform Animations Here, before the round is resolved.
 	//Gives the illusion that the round is unable to resolve until the visuals complete
 	PerformRoundAnim();
-
-	//ResolveRound();
-
-	//Cleanup The Round Animations
-	//CleanupRoundAnim();
 }
 
 void URPSRound::PerformRoundAnim()
@@ -40,15 +35,12 @@ void URPSRound::PerformRoundAnim()
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerPawn::StaticClass(), PlayerActors);
 		Player = Cast<APlayerPawn>(PlayerActors[0]);
 	}
-
 	//Toggle the Spot Light Intensities
 	Player->GetChoiceObject()->ToggleIntensity(500.f);
 	Opp->GetChoiceObject()->ToggleIntensity(500.f);
 
 	//Run the Round Sequencer to have the choices move to the center
 	Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->RoundSequencer();
-
-	Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->OppositionSequencer();
 }
 
 void URPSRound::CleanupRoundAnim()
@@ -72,7 +64,7 @@ void URPSRound::CleanupRoundAnim()
 	Player->GetChoiceObject()->ToggleIntensity(0.f);
 	Opp->GetChoiceObject()->ToggleIntensity(0.f);
 
-	Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->CleanupSequencer();
+	ResolveRound();
 }
 
 void URPSRound::ResolveRound()
