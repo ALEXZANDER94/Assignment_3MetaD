@@ -28,14 +28,21 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	EType GetChoice() { return ChoiceType; }
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	ARPSChoice* GetChoiceObject() { return Choice; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void SetChoice(EType choice) { ChoiceType = choice; };
 
+	void SetChoiceObject(ARPSChoice* choice) { Choice = choice; };
+
 private:
 	EType ChoiceType;
 
 	UOpponentAI* OpponentAI;
+
+	ARPSChoice* Choice;
 };

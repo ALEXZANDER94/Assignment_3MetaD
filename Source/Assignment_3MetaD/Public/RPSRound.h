@@ -77,6 +77,11 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 		UFUNCTION(BlueprintCallable)
 		void ResetGame();
 
+		void PerformRoundAnim();
+
+		UFUNCTION(BlueprintCallable)
+		void CleanupRoundAnim();
+
 	protected:
 		void ResolveRound();
 		void SetStatus(FString status) { RoundStatus = status; };
