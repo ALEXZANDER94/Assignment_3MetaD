@@ -123,21 +123,16 @@ void APlayerPawn::SetChoiceObject(ARPSChoice* choice)
 
 void APlayerPawn::TogglePlayerInput()
 {
-	if (bPlayerEnabled)
-	{
-		bPlayerEnabled = false;
-		DisableInput(GetWorld()->GetFirstPlayerController());
-	}
-	else
-	{
-		bPlayerEnabled = true;
-		EnableInput(GetWorld()->GetFirstPlayerController());
-	}
+	bPlayerEnabled = !bPlayerEnabled;
 }
 
 
 void APlayerPawn::MakeChoice(uint8 choice)
 {
+	if (!bPlayerEnabled)
+	{
+		return;
+	}
 	if ((uint8)choice != 255)
 	{
 		/* Choice Made is from Keyboard Input */

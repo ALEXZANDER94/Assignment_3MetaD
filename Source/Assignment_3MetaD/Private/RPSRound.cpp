@@ -18,6 +18,9 @@ void URPSRound::OpponentTurn()
 	PerformRoundAnim();
 
 	//ResolveRound();
+
+	//Cleanup The Round Animations
+	//CleanupRoundAnim();
 }
 
 void URPSRound::PerformRoundAnim()
@@ -37,10 +40,39 @@ void URPSRound::PerformRoundAnim()
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerPawn::StaticClass(), PlayerActors);
 		Player = Cast<APlayerPawn>(PlayerActors[0]);
 	}
+
+	//Toggle the Spot Light Intensities
 	Player->GetChoiceObject()->ToggleIntensity(500.f);
 	Opp->GetChoiceObject()->ToggleIntensity(500.f);
-	//Player->GetChoiceObject()->RPSLight->SetVisibility(true);
-	//Opp->GetChoiceObject()->RPSLight->SetVisibility(true);
+
+	//Run the Round Sequencer to have the choices move to the center
+	Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->RoundSequencer();
+
+	Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->OppositionSequencer();
+}
+
+void URPSRound::CleanupRoundAnim()
+{
+	//To clean up the Round, just reverse what was done.
+	//Get the Opponent
+	if (!Opp)
+	{
+		TArray<AActor*> OpponentActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AOpponent::StaticClass(), OpponentActors);
+		Opp = Cast<AOpponent>(OpponentActors[0]);
+	}
+	if (!Player)
+	{
+		//Get the Player
+		TArray<AActor*> PlayerActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerPawn::StaticClass(), PlayerActors);
+		Player = Cast<APlayerPawn>(PlayerActors[0]);
+	}
+
+	Player->GetChoiceObject()->ToggleIntensity(0.f);
+	Opp->GetChoiceObject()->ToggleIntensity(0.f);
+
+	Cast<ARPS>(UGameplayStatics::GetGameMode(GetWorld()))->CleanupSequencer();
 }
 
 void URPSRound::ResolveRound()

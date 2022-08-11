@@ -79,6 +79,8 @@ class ASSIGNMENT_3METAD_API URPSRound : public UGameInstance
 
 		void PerformRoundAnim();
 
+		void CleanupRoundAnim();
+
 	protected:
 		void ResolveRound();
 		void SetStatus(FString status) { RoundStatus = status; };

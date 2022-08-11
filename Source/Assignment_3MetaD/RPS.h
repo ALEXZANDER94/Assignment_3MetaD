@@ -30,4 +30,13 @@ class ASSIGNMENT_3METAD_API ARPS : public AGameModeBase
 
 		UFUNCTION(BlueprintImplementableEvent)
 		void MoveLogDown();
+
+		UFUNCTION(BlueprintImplementableEvent)
+		void RoundSequencer();
+
+		UFUNCTION(BlueprintImplementableEvent)
+		void OppositionSequencer();
+
+		UFUNCTION(BlueprintImplementableEvent)
+		void CleanupSequencer();
 };
