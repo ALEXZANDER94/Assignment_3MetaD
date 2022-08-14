@@ -213,7 +213,7 @@ void URPSRound::ResetGame()
 	DrawGames = 0;
 	PlayerWon = EStatus::Draw;
 	GameOver = false;
+	Player = nullptr;
+	Opp = nullptr;
 	Round = 1;
-
-	GetPlayer()->TogglePlayerInput();
 }
